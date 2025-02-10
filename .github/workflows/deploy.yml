@@ -1,12 +1,10 @@
-name: Test and Deploy HTML to GitHub Pages
+name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -24,23 +22,28 @@ jobs:
       - name: Install htmlhint
         run: npm install -g htmlhint
 
-      - name: Run htmlhint
+      - name: Run HTML validation
         run: htmlhint "**/*.html"
 
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
-      - name: Upload files
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: .
+          path: ./
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v2
