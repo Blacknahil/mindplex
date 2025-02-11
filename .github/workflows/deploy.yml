@@ -23,7 +23,7 @@ jobs:
         run: npm install -g htmlhint
 
       - name: Run HTML validation
-        run: htmlhint "**/*.html"
+        run: htmlhint "./*.html"
 
   deploy:
     needs: test
@@ -47,7 +47,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'icog-journey'  # Verify this path contains your index.html
+          path: './'
 
       - name: Deploy to GitHub Pages
         id: deployment
